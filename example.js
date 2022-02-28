@@ -28,15 +28,8 @@ function statement (invoices, plays){
     let totalAmount = 0;
     let volumeCredits = 0;
     let result = `Statement for ${invoices.customer}\n`
-    const format = new Intl.NumberFormat("en-US",
-        {style: "currency", currency: 'USD',
-        minimumFractionDigits: 2}).format;
     for (let perf of invoices.performances) {
-        // add volume credits
-        volumeCredits += Math.max(perf.audience - 30, 0)
-        // add extra credit for every ten comedy attendees
-        if ('comedy' === playFor(perf).type) volumeCredits += Math.floor(perf.audience / 5);
-
+        volumeCredits = volumeCreditsFor(perf);
         result += `  ${playFor(perf).name}: ${format(amountFor(perf)/100)} (${perf.audience} seats)\n`;
         totalAmount += amountFor(perf);
     }
@@ -45,8 +38,21 @@ function statement (invoices, plays){
     return result
 }
 
+function format(aNumber){
+    return new Intl.NumberFormat("en-US",
+        {style: "currency", currency: 'USD',
+        minimumFractionDigits: 2}).format(aNumber);
+}
+
+function volumeCreditsFor(perf){
+    let result = 0;
+    result += Math.max(perf.audience - 30, 0);
+    if ('comedy' === playFor(perf).type) result += Math.floor(perf.audience / 5);
+    return result;
+}
+
 function playFor(aPerformance) {
-    return plays[aPerformance.playID]
+    return plays[aPerformance.playID];
 }
 
 function amountFor(aPerformance){
