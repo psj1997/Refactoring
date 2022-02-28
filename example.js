@@ -25,15 +25,20 @@ invoices =
     }
 
 function statement (invoices, plays){
-    let totalAmount = 0;
     let result = `Statement for ${invoices.customer}\n`
     for (let perf of invoices.performances) {
         result += `  ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience} seats)\n`;
-        totalAmount += amountFor(perf);
     }
-
-    result += `Amount owed is ${usd(totalAmount)}\n`;
+    result += `Amount owed is ${usd(totalAmount())}\n`;
     result += `You earned ${totalVolumeCredits()} credits\n`;
+    return result
+}
+
+function totalAmount(){
+    let result = 0;
+    for (let perf of invoices.performances) {
+        result += amountFor(perf);
+    }
     return result
 }
 
