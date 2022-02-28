@@ -32,13 +32,16 @@ function statement (invoices, plays){
         totalAmount += amountFor(perf);
     }
 
-    let volumeCredits = 0;
-    for (let perf of invoices.performances) {
+    result += `Amount owed is ${usd(totalAmount)}\n`;
+    result += `You earned ${totalVolumeCredits()} credits\n`;
+    return result
+}
+
+function totalVolumeCredits() {
+    let volumeCredits = 0
+        for (let perf of invoices.performances) {
         volumeCredits = volumeCreditsFor(perf);
     }
-    result += `Amount owed is ${usd(totalAmount)}\n`;
-    result += `You earned ${volumeCredits} credits\n`;
-    return result
 }
 
 function usd(aNumber){
